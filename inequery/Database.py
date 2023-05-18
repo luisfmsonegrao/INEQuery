@@ -1,13 +1,14 @@
 import pandas as pd
 from os.path import dirname, abspath
+
+module_path = dirname(dirname(abspath(__file__)))
+database_relative_path = "\data\indicators.json"
+database_path = module_path + database_relative_path
+
 class DataBase():
 
     def __init__(self):
-        path = dirname(dirname(abspath(__file__)))
-        rel_path_data = "\data"
-        filename = "\indicators.json"
-        path = path + rel_path_data + filename
-        self.df = pd.read_json(path)
+        self.df = pd.read_json(database_path)
 
     def get_all_themes(self):
         return self.df.theme.unique()
