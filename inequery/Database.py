@@ -21,3 +21,33 @@ class DataBase():
 
     def get_subtheme(self, subtheme):
         return self.df[self.df.subtheme == subtheme]
+    
+    def get_all_subtheme_indicators(self, subtheme):
+        return self.df.title[self.df.subtheme == subtheme].unique()
+    
+    def get_indicator(self, theme, subtheme, indicator):
+        return self.df[(self.df.theme == theme) & (self.df.subtheme == subtheme) & (self.df.title == indicator)]
+    
+    def get_indicator_code(self, theme, subtheme, indicator):
+        return self.df.code[(self.df.theme == theme) & (self.df.subtheme == subtheme) & (self.df.title == indicator)]#Sometimes there is more than one code for same theme-subtheme-indicator. What do do?
+    
+    def get_indicator_by_code(self, code):
+        return self.df[self.df.code == code].iloc[[0]]
+    
+    def get_indicator_url(self, code):
+        ind = self.get_indicator_by_code(code)
+        return ind.json_dataset.iloc[0]
+    
+    def get_first_available(self, code):
+        ind = self.get_indicator_by_code(code)
+        return ind.first_period_available.iloc[0]
+    
+    def get_last_available(self, code):
+        ind = self.get_indicator_by_code(code)
+        return ind.last_period_available.iloc[0]
+    
+    def get_themes(self, *args):
+        return self.df[self.df.theme.isin(args)]
+    
+    def get_indicators(self, theme, subtheme, *args):
+        return self.df[(self.df.theme == theme) & (self.df.subtheme == subtheme) & (self.df.title.isin(args))]
