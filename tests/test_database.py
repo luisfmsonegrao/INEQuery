@@ -44,7 +44,7 @@ def test_get_indicator_code():
     code = indicator_df.code
     assert all(db.get_indicator_code(theme, subtheme, indicator) == code)
 
-def test_get_indicator_url():
+def test_get_indicator_data_url():
     theme = db.df.theme.unique()[0]
     subtheme = db.get_all_theme_subthemes(theme)[2]
     indicator = db.get_all_subtheme_indicators(subtheme)[20]
@@ -52,8 +52,8 @@ def test_get_indicator_url():
     code = indicator_df.code.iloc[0]
     url = indicator_df.json_dataset.iloc[0]
     print(url)
-    print(db.get_indicator_url(code))
-    assert db.get_indicator_url(code) == url
+    print(db.get_indicator_data_url(code))
+    assert db.get_indicator_data_url(code) == url
 
 def test_get_first_available():
     theme = db.df.theme.unique()[0]
@@ -88,3 +88,20 @@ def test_get_indicators():
     indicator3 = db.get_all_subtheme_indicators(subtheme)[30]
     indicators_df = db.df[(db.df.theme == theme) & (db.df.subtheme == subtheme) & ((db.df.title == indicator1) | (db.df.title == indicator2) | (db.df.title == indicator3))]
     assert all(db.get_indicators(theme, subtheme, indicator1, indicator2, indicator3) == indicators_df)
+
+
+def test_get_periodicity():
+    theme = db.df.theme.unique()[0]
+    subtheme = db.get_all_theme_subthemes(theme)[2]
+    indicator = db.get_all_subtheme_indicators(subtheme)[20]
+    code = db.get_indicator_code(theme, subtheme, indicator).iloc[0]
+    periodicity = db.df.periodicity[(db.df.theme == theme) & (db.df.subtheme == subtheme) & (db.df.title == indicator) & (db.df.code == code)].iloc[0].strip()
+    assert db.get_periodicity(code) == periodicity
+
+def test_get_indicator_time_prefix():
+    theme = db.df.theme.unique()[0]
+    subtheme = db.get_all_theme_subthemes(theme)[2]
+    indicator = db.get_all_subtheme_indicators(subtheme)[20]
+    code = db.get_indicator_code(theme, subtheme, indicator).iloc[0]
+    prefix = db.get_first_available(code).split('A')[0] + 'A'
+    assert db.get_indicator_time_prefix(code) == prefix

@@ -34,9 +34,13 @@ class DataBase():
     def get_indicator_by_code(self, code):
         return self.df[self.df.code == code].iloc[[0]]
     
-    def get_indicator_url(self, code):
+    def get_indicator_data_url(self, code):
         ind = self.get_indicator_by_code(code)
         return ind.json_dataset.iloc[0]
+    
+    def get_indicator_metadata_url(self, code):
+        ind = self.get_indicator_by_code(code)
+        return ind.json_metainfo.iloc[0]
     
     def get_first_available(self, code):
         ind = self.get_indicator_by_code(code)
@@ -51,3 +55,14 @@ class DataBase():
     
     def get_indicators(self, theme, subtheme, *args):
         return self.df[(self.df.theme == theme) & (self.df.subtheme == subtheme) & (self.df.title.isin(args))]
+
+    def get_periodicity(self, code):
+        df = self.get_indicator_by_code(code)
+        return df.periodicity.iloc[0].strip()
+    
+    def get_indicator_time_prefix(self, code):
+        df = self.get_indicator_by_code(code)
+        first = df.first_period_available.iloc[0]
+        prefix = first.split('A')[0] + 'A'
+        return prefix
+
