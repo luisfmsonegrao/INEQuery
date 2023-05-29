@@ -2,7 +2,7 @@ import pandas as pd
 from os.path import dirname, abspath
 
 module_path = dirname(dirname(abspath(__file__)))
-database_relative_path = "\data\indicators.json"
+database_relative_path = "/data/indicators.json"
 database_path = module_path + database_relative_path
 
 class DataBase():
